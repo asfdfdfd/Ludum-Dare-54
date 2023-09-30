@@ -6,6 +6,6 @@ public class GamePlay01Scene : MonoBehaviour
 {
     private void Start()
     {
-        SceneManager.LoadScene("GameOverScene", LoadSceneMode.Single);
+        // SceneManager.LoadScene("GameOverScene", LoadSceneMode.Single);
     }
 }
