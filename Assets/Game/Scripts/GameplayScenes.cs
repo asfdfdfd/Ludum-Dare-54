@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameplayScenes : MonoBehaviour
@@ -7,8 +9,15 @@ public class GameplayScenes : MonoBehaviour
     [SerializeField] private List<GameObject> _gamePlayScenesPrefabs;
 
     private int _currentGameplaySceneIndex = -1;
+
+    private GameObject _currentGamePlayScene = null;
     
     public void LoadNextScene()
+    {
+        StartCoroutine(LoadNextSceneCoroutine());
+    }
+
+    private IEnumerator LoadNextSceneCoroutine()
     {
         _currentGameplaySceneIndex++;
 
@@ -17,11 +26,15 @@ public class GameplayScenes : MonoBehaviour
             _currentGameplaySceneIndex = 0;
         }
 
-        foreach (Transform childTransform in gameObject.transform)
+        if (_currentGamePlayScene != null)
         {
-            Destroy(childTransform.gameObject);
-        }
+            yield return _currentGamePlayScene.transform.DOScale(Vector3.zero, 0.1f).SetEase(Ease.Linear).WaitForCompletion();
+        } 
+        
+        Destroy(_currentGamePlayScene);
 
-        var gamePlaySceneGameObject = Instantiate(_gamePlayScenesPrefabs[_currentGameplaySceneIndex], gameObject.transform);
+        _currentGamePlayScene = Instantiate(_gamePlayScenesPrefabs[_currentGameplaySceneIndex], gameObject.transform);
+
+        yield return null;
     }
 }
