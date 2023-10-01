@@ -15,23 +15,6 @@ public class RhythmItem : MonoBehaviour
     public void Launch(double travelStartTimeSec, double travelFinishTimeSec, Vector3 targetPosition)
     {
         StartCoroutine(LaunchCoroutine(travelStartTimeSec, travelFinishTimeSec, targetPosition));
-        
-        // var startX = transform.position.x;
-        //
-        // gameObject.transform
-        //     .DOMove(Vector3.zero, travelDurationSec)
-        //     .SetEase(Ease.Linear);        
-
-        // var forwardTween = gameObject.transform
-        //     .DOMoveX(startX * -1, 3.0f * 2.0f)
-        //     .SetEase(Ease.Linear);
-
-        // var nextTween = gameObject.transform
-        //     .DOMoveX(startX * -1, 5.5f)
-        //     .SetEase(Ease.Linear);
-        //
-        // DOTween.Sequence().Append(forwardTween).Append(nextTween)
-        //     .OnComplete(() => { Destroy(gameObject); });
     }
 
     private IEnumerator LaunchCoroutine(double travelStartTimeSec, double travelFinishTimeSec, Vector3 targetPosition)

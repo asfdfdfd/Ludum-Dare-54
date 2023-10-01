@@ -14,9 +14,13 @@ public class RhythmItemTrigger : MonoBehaviour
 
     private SoundPlayer _soundPlayer;
 
+    private HealthManager _healthManager;
+
     private void Start()
     {
         _soundPlayer = GameObject.FindWithTag("SoundPlayer").GetComponent<SoundPlayer>();
+
+        _healthManager = GameObject.FindWithTag("HealthItems").GetComponent<HealthManager>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -35,6 +39,8 @@ public class RhythmItemTrigger : MonoBehaviour
                 OnRhythmItemMissed.Invoke();
                 
                 _soundPlayer.PlayFailedSound();
+
+                _healthManager.Hit();
             }
         }
     }
@@ -49,6 +55,8 @@ public class RhythmItemTrigger : MonoBehaviour
             OnRhythmItemMissed.Invoke();
             
             _soundPlayer.PlayFailedSound();
+            
+            _healthManager.Hit();
         }
     }
 
@@ -69,6 +77,8 @@ public class RhythmItemTrigger : MonoBehaviour
                 OnRhythmItemMissed.Invoke();
                 
                 _soundPlayer.PlayFailedSound();
+                
+                _healthManager.Hit();
             }
         }
     }
