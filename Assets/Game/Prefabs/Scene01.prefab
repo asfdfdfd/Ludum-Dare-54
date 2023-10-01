@@ -50,6 +50,10 @@ MonoBehaviour:
   _abs01GameObject: {fileID: 7298369637471896679}
   _abs02GameObject: {fileID: 2656945152684400281}
   _lickerGameObject: {fileID: 4373602487512434402}
+  _lickerLeftDelta: -1.8
+  _lickerRightDelta: 1.3
+  _abs01Delta: 2
+  _abs02Delta: 2
 --- !u!1001 &2890805580182463432
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -181,7 +185,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: d4dae323b7d8d2b4bbc7c99e94ad5a84,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.01
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: d4dae323b7d8d2b4bbc7c99e94ad5a84,
         type: 3}
