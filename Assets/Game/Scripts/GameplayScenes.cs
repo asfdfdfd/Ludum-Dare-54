@@ -22,6 +22,6 @@ public class GameplayScenes : MonoBehaviour
             Destroy(childTransform.gameObject);
         }
 
-        var gamePlaySceneGameObject = Instantiate(_gamePlayScenesPrefabs[0], gameObject.transform);
+        var gamePlaySceneGameObject = Instantiate(_gamePlayScenesPrefabs[_currentGameplaySceneIndex], gameObject.transform);
     }
 }

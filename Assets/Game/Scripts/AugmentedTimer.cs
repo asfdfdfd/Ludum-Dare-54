@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class AugmentedTimer : MonoBehaviour
@@ -28,5 +29,13 @@ public class AugmentedTimer : MonoBehaviour
     public double GetAugmentedTime()
     {
         return _augmentedClock;
+    }
+
+    public IEnumerator WaitAugmentedTime(double time)
+    {
+        while (time > _augmentedClock)
+        {
+            yield return null;
+        }
     }
 }

@@ -11,7 +11,14 @@ public class RhythmItemTrigger : MonoBehaviour
     private bool _hasTriggeredRhythmItem = false;
     
     private GameObject _triggeredRhythmItemGameObject;
-    
+
+    private SoundPlayer _soundPlayer;
+
+    private void Start()
+    {
+        _soundPlayer = GameObject.FindWithTag("SoundPlayer").GetComponent<SoundPlayer>();
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("RhythmItem"))
@@ -26,6 +33,8 @@ public class RhythmItemTrigger : MonoBehaviour
                 _triggeredRhythmItemGameObject = other.gameObject.transform.parent.gameObject;
                 
                 OnRhythmItemMissed.Invoke();
+                
+                _soundPlayer.PlayFailedSound();
             }
         }
     }
@@ -38,6 +47,8 @@ public class RhythmItemTrigger : MonoBehaviour
             _triggeredRhythmItemGameObject = null;
 
             OnRhythmItemMissed.Invoke();
+            
+            _soundPlayer.PlayFailedSound();
         }
     }
 
@@ -52,6 +63,12 @@ public class RhythmItemTrigger : MonoBehaviour
                 _triggeredRhythmItemGameObject = null;
                 
                 OnRhythmItemCaptured.Invoke();
+            }
+            else
+            {
+                OnRhythmItemMissed.Invoke();
+                
+                _soundPlayer.PlayFailedSound();
             }
         }
     }

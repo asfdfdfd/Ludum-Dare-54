@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,8 +15,9 @@ public class RhythmItemGenerator : MonoBehaviour
 
     [SerializeField] private TextAsset _musicLayout;
     
-    private readonly float _bpm = 120;
-    private readonly float _partsInBeat = 2;
+    private readonly int _bpm = 120;
+    private readonly int _partsInBeat = 2;
+    private readonly int _bpmInScene = 32;
 
     private float _msecInBeat;
     private float _msecInPart;
@@ -30,9 +32,13 @@ public class RhythmItemGenerator : MonoBehaviour
     private RhythmItemTrigger _rhythmItemTrigger;
 
     private GameplayScenes _gameplayScenes;
+
+    private int _partsUntilNextScene;
     
     private void Start()
     {
+        _partsUntilNextScene = _bpmInScene * _partsInBeat;
+        
         _rhythmItemTrigger = GameObject.FindWithTag("RhythmItemTrigger").GetComponent<RhythmItemTrigger>();
         
         _musicAudioSource = GameObject.FindWithTag("MusicPlayer").GetComponent<AudioSource>();
@@ -41,7 +47,7 @@ public class RhythmItemGenerator : MonoBehaviour
 
         _gameplayScenes = GameObject.FindWithTag("GameplayScenes").GetComponent<GameplayScenes>();
         
-        var msecInMinute = 60 * 1000;
+        var msecInMinute = 60 * 1000.0f;
         
         _msecInBeat = msecInMinute / _bpm;
         _msecInPart = _msecInBeat / _partsInBeat;
@@ -50,8 +56,6 @@ public class RhythmItemGenerator : MonoBehaviour
         LoadRhythmItemRecords();
         
         StartCoroutine(GeneratorCoroutine());
-
-        _gameplayScenes.LoadNextScene();
     }
 
     private void LoadRhythmItemRecords()
@@ -76,9 +80,13 @@ public class RhythmItemGenerator : MonoBehaviour
 
     private IEnumerator GeneratorCoroutine()
     {
-        var travelStartTime =_augmentedTimer.GetAugmentedTime() + _playerPrepareSec;
+        var musicStartTime =_augmentedTimer.GetAugmentedTime() + _playerPrepareSec;
+
+        StartCoroutine(SceneSwitcherCoroutine(musicStartTime));
         
-        _musicAudioSource.PlayScheduled(travelStartTime);
+        _musicAudioSource.PlayScheduled(musicStartTime);
+
+        var partsInSceneCounter = 0;
         
         foreach (var rhythmItemRecord in _rhythmItemRecords)
         {
@@ -88,12 +96,28 @@ public class RhythmItemGenerator : MonoBehaviour
             if (rhythmItemRecord.hasBeat)
             {
                 // rhythmItem.Launch(travelDurationSec);
-                rhythmItem.Launch(_augmentedTimer.GetAugmentedTime(), travelStartTime, _rhythmItemTrigger.gameObject.transform.position);                
+                rhythmItem.Launch(_augmentedTimer.GetAugmentedTime(), musicStartTime, _rhythmItemTrigger.gameObject.transform.position);                
             }
 
-            travelStartTime += _secInPart;
+            musicStartTime += _secInPart;
 
             yield return new WaitForSeconds(_secInPart);            
+        }
+    }
+
+    private IEnumerator SceneSwitcherCoroutine(double musicStartTime)
+    {
+        _gameplayScenes.LoadNextScene();
+
+        var nextSceneLoadTime = musicStartTime + _bpmInScene * _partsInBeat * _secInPart;
+        
+        while (true)
+        {
+            yield return _augmentedTimer.WaitAugmentedTime(nextSceneLoadTime);
+            
+            _gameplayScenes.LoadNextScene();
+            
+            nextSceneLoadTime = nextSceneLoadTime + _bpmInScene * _partsInBeat * _secInPart;
         }
     }
 }
