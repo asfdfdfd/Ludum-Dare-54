@@ -50,6 +50,10 @@ MonoBehaviour:
   _abs01GameObject: {fileID: 5356590236839779598}
   _abs02GameObject: {fileID: 451528697421939836}
   _lickerGameObject: {fileID: 7944155130782935139}
+  _lickerLeftDelta: -1.28
+  _lickerRightDelta: 4.78
+  _abs01Delta: 1.28
+  _abs02Delta: 4.78
 --- !u!1001 &758099132005480749
 PrefabInstance:
   m_ObjectHideFlags: 0

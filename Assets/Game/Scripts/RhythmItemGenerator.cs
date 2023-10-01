@@ -6,6 +6,7 @@ using System.IO;
 using CsvHelper;
 using Game.Scripts;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RhythmItemGenerator : MonoBehaviour
 {
@@ -95,7 +96,6 @@ public class RhythmItemGenerator : MonoBehaviour
 
             if (rhythmItemRecord.hasBeat)
             {
-                // rhythmItem.Launch(travelDurationSec);
                 rhythmItem.Launch(_augmentedTimer.GetAugmentedTime(), musicStartTime, _rhythmItemTrigger.gameObject.transform.position);                
             }
 
@@ -103,6 +103,10 @@ public class RhythmItemGenerator : MonoBehaviour
 
             yield return new WaitForSeconds(_secInPart);            
         }
+        
+        yield return new WaitForSeconds(_secInPart * 2);
+
+        SceneManager.LoadScene("WinScene");
     }
 
     private IEnumerator SceneSwitcherCoroutine(double musicStartTime)

@@ -7,6 +7,12 @@ public class Scene01 : MonoBehaviour
     [SerializeField] private GameObject _abs01GameObject;
     [SerializeField] private GameObject _abs02GameObject;
     [SerializeField] private GameObject _lickerGameObject;
+
+    [SerializeField] private float _lickerLeftDelta;
+    [SerializeField] private float _lickerRightDelta;
+    
+    [SerializeField] private float _abs01Delta;
+    [SerializeField] private float _abs02Delta;
     
     private RhythmItemTrigger _rhythmItemTrigger;
 
@@ -15,10 +21,8 @@ public class Scene01 : MonoBehaviour
 
     private Vector3 _lickerStartupPosition;
 
-    private List<GameObject> _abses = new();
-
     private int _currentTargetAbsIndex = 0;
-    
+
     private void Start()
     {
         _rhythmItemTrigger = GameObject.FindWithTag("RhythmItemTrigger").GetComponent<RhythmItemTrigger>();
@@ -30,17 +34,23 @@ public class Scene01 : MonoBehaviour
         _abs02StartupPosition = _abs02GameObject.transform.position;
 
         _lickerStartupPosition = _lickerGameObject.transform.position;
-        
-        _abses.Add(_abs01GameObject);
-        _abses.Add(_abs02GameObject);
     }
 
     private void OnRhythmItemCaptured()
     {
-        var targetAbs = _abses[_currentTargetAbsIndex];
+        float targetAbsPositionX;
         
-        var lickerForwardTween = _lickerGameObject.transform.DOMove(targetAbs.transform.position, 0.3f);
-        var lickerBackwardsTween = _lickerGameObject.transform.DOMove(_lickerStartupPosition, 0.3f);
+        if (_currentTargetAbsIndex == 0)
+        {
+            targetAbsPositionX = _lickerLeftDelta;
+        }
+        else
+        {
+            targetAbsPositionX = _lickerRightDelta;
+        }
+        
+        var lickerForwardTween = _lickerGameObject.transform.DOMoveX(_lickerStartupPosition.x + targetAbsPositionX, 0.1f);
+        var lickerBackwardsTween = _lickerGameObject.transform.DOMoveX(_lickerStartupPosition.x, 0.1f);
 
         DOTween.Sequence().Append(lickerForwardTween).Append(lickerBackwardsTween);
         
@@ -51,7 +61,7 @@ public class Scene01 : MonoBehaviour
     {
         _currentTargetAbsIndex++;
         
-        if (_currentTargetAbsIndex == _abses.Count)
+        if (_currentTargetAbsIndex == 2)
         {
             _currentTargetAbsIndex = 0;
         }
@@ -59,13 +69,13 @@ public class Scene01 : MonoBehaviour
 
     private void OnRhythmMissed()
     {
-        var abs01ForwardTween = _abs01GameObject.transform.DOMove(_lickerGameObject.transform.position, 0.3f);
-        var abs01BackwardsTween = _abs01GameObject.transform.DOMove(_abs01StartupPosition, 0.3f);
+        var abs01ForwardTween = _abs01GameObject.transform.DOMoveX(_abs01StartupPosition.x + _abs01Delta, 0.1f);
+        var abs01BackwardsTween = _abs01GameObject.transform.DOMoveX(_abs01StartupPosition.x, 0.1f);
 
         DOTween.Sequence().Append(abs01ForwardTween).Append(abs01BackwardsTween);
         
-        var abs02ForwardTween = _abs02GameObject.transform.DOMove(_lickerGameObject.transform.position, 0.3f);
-        var abs02BackwardsTween = _abs02GameObject.transform.DOMove(_abs02StartupPosition, 0.3f);
+        var abs02ForwardTween = _abs02GameObject.transform.DOMoveX(_abs02StartupPosition.x - _abs02Delta, 0.1f);
+        var abs02BackwardsTween = _abs02GameObject.transform.DOMoveX(_abs02StartupPosition.x, 0.1f);
         
         DOTween.Sequence().Append(abs02ForwardTween).Append(abs02BackwardsTween);
     }
