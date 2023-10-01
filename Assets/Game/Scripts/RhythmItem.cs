@@ -1,24 +1,54 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
 public class RhythmItem : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private AugmentedTimer _augmentedTimer;
+    
+    private void Start()
     {
-        
+        _augmentedTimer = GameObject.FindWithTag("AugmentedTimer").GetComponent<AugmentedTimer>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Launch(double travelStartTimeSec, double travelFinishTimeSec, Vector3 targetPosition)
     {
+        StartCoroutine(LaunchCoroutine(travelStartTimeSec, travelFinishTimeSec, targetPosition));
         
+        // var startX = transform.position.x;
+        //
+        // gameObject.transform
+        //     .DOMove(Vector3.zero, travelDurationSec)
+        //     .SetEase(Ease.Linear);        
+
+        // var forwardTween = gameObject.transform
+        //     .DOMoveX(startX * -1, 3.0f * 2.0f)
+        //     .SetEase(Ease.Linear);
+
+        // var nextTween = gameObject.transform
+        //     .DOMoveX(startX * -1, 5.5f)
+        //     .SetEase(Ease.Linear);
+        //
+        // DOTween.Sequence().Append(forwardTween).Append(nextTween)
+        //     .OnComplete(() => { Destroy(gameObject); });
     }
 
-    public void Launch()
+    private IEnumerator LaunchCoroutine(double travelStartTimeSec, double travelFinishTimeSec, Vector3 targetPosition)
     {
-        gameObject.transform.DOMoveX(0.0f, 12.0f).SetSpeedBased(true).SetEase(Ease.Linear);
+        var travelFinishTimeSecNormalized = travelFinishTimeSec - travelStartTimeSec;
+        
+        _augmentedTimer = GameObject.FindWithTag("AugmentedTimer").GetComponent<AugmentedTimer>();
+        
+        var startPosition = gameObject.transform.position;
+        
+        while (true)
+        {
+            var augmentedTime = _augmentedTimer.GetAugmentedTime();
+            var augmentedTimeNormalized = augmentedTime - travelStartTimeSec;
+            var lerpedPosition = Vector3.Lerp(startPosition, targetPosition, (float) (augmentedTimeNormalized / travelFinishTimeSecNormalized));
+            gameObject.transform.position = lerpedPosition;
+            yield return new WaitForEndOfFrame();
+        }
     }
 }

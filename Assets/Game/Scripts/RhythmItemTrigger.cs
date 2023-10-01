@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -18,14 +16,29 @@ public class RhythmItemTrigger : MonoBehaviour
     {
         if (other.CompareTag("RhythmItem"))
         {
-            _triggeredRhythmItemGameObject = other.gameObject.transform.parent.gameObject;
-            _hasTriggeredRhythmItem = true;
+            if (!_hasTriggeredRhythmItem)
+            {
+                _triggeredRhythmItemGameObject = other.gameObject.transform.parent.gameObject;
+                _hasTriggeredRhythmItem = true;
+            }
+            else
+            {
+                _triggeredRhythmItemGameObject = other.gameObject.transform.parent.gameObject;
+                
+                OnRhythmItemMissed.Invoke();
+            }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        
+        if (_hasTriggeredRhythmItem)
+        {
+            _hasTriggeredRhythmItem = false;
+            _triggeredRhythmItemGameObject = null;
+
+            OnRhythmItemMissed.Invoke();
+        }
     }
 
     private void Update()

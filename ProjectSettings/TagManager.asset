@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - RhythmItem
+  - RhythmItemTrigger
+  - MusicPlayer
+  - AugmentedTimer
+  - GameplayScenes
   layers:
   - Default
   - TransparentFX
