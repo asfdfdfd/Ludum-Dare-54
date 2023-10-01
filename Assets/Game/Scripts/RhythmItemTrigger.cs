@@ -1,9 +1,15 @@
 using System;
+using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class RhythmItemTrigger : MonoBehaviour
 {
+    [SerializeField] private Material _materialRegular;
+    [SerializeField] private Material _materialError;
+    [SerializeField] private Material _materialSuccess;
+    
     public UnityEvent OnRhythmItemCaptured = new UnityEvent();
 
     public UnityEvent OnRhythmItemMissed = new UnityEvent();
@@ -16,6 +22,14 @@ public class RhythmItemTrigger : MonoBehaviour
 
     private HealthManager _healthManager;
 
+    private Tweener _tweenerMaterial;
+
+    [SerializeField] private MeshRenderer _meshRenderer;
+
+    [SerializeField] private Color _colorRegular;
+    [SerializeField] private Color _colorError;
+    [SerializeField] private Color _colorSuccess;
+    
     private void Start()
     {
         _soundPlayer = GameObject.FindWithTag("SoundPlayer").GetComponent<SoundPlayer>();
@@ -41,6 +55,8 @@ public class RhythmItemTrigger : MonoBehaviour
                 _soundPlayer.PlayFailedSound();
 
                 _healthManager.Hit();
+                
+                StartCoroutine(BlinkError());
             }
         }
     }
@@ -57,6 +73,8 @@ public class RhythmItemTrigger : MonoBehaviour
             _soundPlayer.PlayFailedSound();
             
             _healthManager.Hit();
+            
+            StartCoroutine(BlinkError());
         }
     }
 
@@ -71,6 +89,10 @@ public class RhythmItemTrigger : MonoBehaviour
                 _triggeredRhythmItemGameObject = null;
                 
                 OnRhythmItemCaptured.Invoke();
+                
+                StartCoroutine(BlinkSuccess());
+
+                // _meshRenderer.material = _materialSuccess;
             }
             else
             {
@@ -79,7 +101,23 @@ public class RhythmItemTrigger : MonoBehaviour
                 _soundPlayer.PlayFailedSound();
                 
                 _healthManager.Hit();
+
+                StartCoroutine(BlinkError());
+                
+                // _meshRenderer.material = _materialError;
             }
         }
     }
+
+    private IEnumerator BlinkError()
+    {
+        yield return _meshRenderer.material.DOColor(_colorError, 0.1f).WaitForCompletion();
+        yield return _meshRenderer.material.DOColor(_colorRegular, 0.1f).WaitForCompletion();
+    }
+    
+    private IEnumerator BlinkSuccess()
+    {
+        yield return _meshRenderer.material.DOColor(_colorSuccess, 0.1f).WaitForCompletion();
+        yield return _meshRenderer.material.DOColor(_colorRegular, 0.1f).WaitForCompletion();
+    }    
 }

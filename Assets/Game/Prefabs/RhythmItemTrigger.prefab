@@ -74,12 +74,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6227f2cb42b574e4b87f56788a28d7dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _materialRegular: {fileID: 0}
+  _materialError: {fileID: 0}
+  _materialSuccess: {fileID: 0}
   OnRhythmItemCaptured:
     m_PersistentCalls:
       m_Calls: []
   OnRhythmItemMissed:
     m_PersistentCalls:
       m_Calls: []
+  _meshRenderer: {fileID: 1614108341745825659}
+  _colorRegular: {r: 0.7372549, g: 0.7372549, b: 0.7372549, a: 0.6862745}
+  _colorError: {r: 0.7647059, g: 0.03137255, b: 0.03137255, a: 0.6862745}
+  _colorSuccess: {r: 1, g: 1, b: 1, a: 0.6862745}
 --- !u!135 &5815747533569746193
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -212,6 +219,12 @@ PrefabInstance:
 --- !u!4 &568816620408740861 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 1556fba3a93189349acd08771269ee4a,
+    type: 3}
+  m_PrefabInstance: {fileID: 31084081289657366}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &1614108341745825659 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -7635826562936255635, guid: 1556fba3a93189349acd08771269ee4a,
     type: 3}
   m_PrefabInstance: {fileID: 31084081289657366}
   m_PrefabAsset: {fileID: 0}
