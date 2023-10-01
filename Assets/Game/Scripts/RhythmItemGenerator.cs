@@ -34,12 +34,8 @@ public class RhythmItemGenerator : MonoBehaviour
 
     private GameplayScenes _gameplayScenes;
 
-    private int _partsUntilNextScene;
-    
     private void Start()
     {
-        _partsUntilNextScene = _bpmInScene * _partsInBeat;
-        
         _rhythmItemTrigger = GameObject.FindWithTag("RhythmItemTrigger").GetComponent<RhythmItemTrigger>();
         
         _musicAudioSource = GameObject.FindWithTag("MusicPlayer").GetComponent<AudioSource>();
@@ -84,6 +80,8 @@ public class RhythmItemGenerator : MonoBehaviour
         var musicStartTime =_augmentedTimer.GetAugmentedTime() + _playerPrepareSec;
 
         StartCoroutine(SceneSwitcherCoroutine(musicStartTime));
+
+        StartCoroutine(WinCoroutine(musicStartTime + _rhythmItemRecords.Count * _secInPart));
         
         _musicAudioSource.PlayScheduled(musicStartTime);
 
@@ -103,10 +101,6 @@ public class RhythmItemGenerator : MonoBehaviour
 
             yield return new WaitForSeconds(_secInPart);            
         }
-        
-        yield return new WaitForSeconds(_secInPart * 2);
-
-        SceneManager.LoadScene("WinScene");
     }
 
     private IEnumerator SceneSwitcherCoroutine(double musicStartTime)
@@ -123,5 +117,12 @@ public class RhythmItemGenerator : MonoBehaviour
             
             nextSceneLoadTime = nextSceneLoadTime + _bpmInScene * _partsInBeat * _secInPart;
         }
+    }
+
+    private IEnumerator WinCoroutine(double winTime)
+    {
+        yield return _augmentedTimer.WaitAugmentedTime(winTime);
+        
+        SceneManager.LoadScene("WinScene");
     }
 }

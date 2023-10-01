@@ -2374,6 +2374,11 @@ PrefabInstance:
       objectReference: {fileID: 4900000, guid: fab7068ba6c9a4f93b390b8cd6bf9d8d, type: 3}
     - target: {fileID: 584453102551220693, guid: 5ae4f035f737a4f278e80df87168ab0c,
         type: 3}
+      propertyPath: _playerPrepareSec
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 584453102551220693, guid: 5ae4f035f737a4f278e80df87168ab0c,
+        type: 3}
       propertyPath: _rhythmItemPrefab
       value: 
       objectReference: {fileID: 5763139278223490191, guid: c6726d5923a244f2a9a65398069130e7,

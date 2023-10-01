@@ -14,10 +14,12 @@ public class RhythmItem : MonoBehaviour
 
     public void Launch(double travelStartTimeSec, double travelFinishTimeSec, Vector3 targetPosition)
     {
-        StartCoroutine(LaunchCoroutine(travelStartTimeSec, travelFinishTimeSec, targetPosition));
+        var distance = transform.position.x - targetPosition.x;
+        var speed = distance / (travelFinishTimeSec - travelStartTimeSec);
+        StartCoroutine(LaunchCoroutine(travelStartTimeSec, travelFinishTimeSec, targetPosition, speed));
     }
 
-    private IEnumerator LaunchCoroutine(double travelStartTimeSec, double travelFinishTimeSec, Vector3 targetPosition)
+    private IEnumerator LaunchCoroutine(double travelStartTimeSec, double travelFinishTimeSec, Vector3 targetPosition, double speed)
     {
         var travelFinishTimeSecNormalized = travelFinishTimeSec - travelStartTimeSec;
         
@@ -29,9 +31,16 @@ public class RhythmItem : MonoBehaviour
         {
             var augmentedTime = _augmentedTimer.GetAugmentedTime();
             var augmentedTimeNormalized = augmentedTime - travelStartTimeSec;
-            var lerpedPosition = Vector3.Lerp(startPosition, targetPosition, (float) (augmentedTimeNormalized / travelFinishTimeSecNormalized));
+            var ratio = (float) (augmentedTimeNormalized / travelFinishTimeSecNormalized);
+            if (ratio >= 1)
+            {
+                break;
+            }
+            var lerpedPosition = Vector3.Lerp(startPosition, targetPosition, ratio);
             gameObject.transform.position = lerpedPosition;
             yield return new WaitForEndOfFrame();
         }
+
+        gameObject.transform.DOMoveX(transform.position.x - 100.0f, (float) speed).SetSpeedBased(true).SetEase(Ease.Linear);
     }
 }
