@@ -168,10 +168,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gamePlayScenesPrefabs:
-  - {fileID: 591101888464328918, guid: e75e7d84f040a54468d5641e0d6f8e70, type: 3}
   - {fileID: 5696441931911994448, guid: 55f9b536537544c43ba90d8981530f4c, type: 3}
-  - {fileID: 5477454997963603002, guid: 6a96fb850c85fcb4592bb36451f57783, type: 3}
   - {fileID: 3684746797463809029, guid: a63867d8db783e84d932e99103332e78, type: 3}
+  - {fileID: 591101888464328918, guid: e75e7d84f040a54468d5641e0d6f8e70, type: 3}
+  - {fileID: 5477454997963603002, guid: 6a96fb850c85fcb4592bb36451f57783, type: 3}
 --- !u!1 &192403852
 GameObject:
   m_ObjectHideFlags: 0
