@@ -15,13 +15,13 @@ public class HealthManager : MonoBehaviour
 
     public void Hit()
     {
-        Destroy(transform.GetChild(0).gameObject);
+        // Destroy(transform.GetChild(0).gameObject);
 
-        _health--;
-        
-        if (_health == 0)
-        {
-            SceneManager.LoadScene("GameOverScene");
-        }
+        // _health--;
+        //
+        // if (_health == 0)
+        // {
+        //     SceneManager.LoadScene("GameOverScene");
+        // }
     }
 }
