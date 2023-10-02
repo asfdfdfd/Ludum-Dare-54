@@ -37,4 +37,17 @@ public class GameplayScenes : MonoBehaviour
 
         yield return null;
     }
+
+    public void Blink()
+    {
+        if (_currentGamePlayScene != null)
+        {
+            var scene = _currentGamePlayScene.GetComponent<Scene>();
+
+            if (scene != null)
+            {
+                scene.Blink();
+            }
+        }
+    }
 }
