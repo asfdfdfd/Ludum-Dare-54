@@ -99,7 +99,7 @@ public class RhythmItemGenerator : MonoBehaviour
 
             musicStartTime += _secInPart;
 
-            yield return new WaitForSeconds(_secInPart);            
+            yield return _augmentedTimer.WaitAugmentedTime(_augmentedTimer.GetAugmentedTime() + _secInPart);            
         }
     }
 
