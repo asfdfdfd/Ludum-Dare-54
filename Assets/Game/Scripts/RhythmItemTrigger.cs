@@ -27,7 +27,15 @@ public class RhythmItemTrigger : MonoBehaviour
     [SerializeField] private Color _colorSuccess;
 
     private Vector3 _startScale;
+
+    [SerializeField] private GameObject _vfxGotit;
+    private ParticleSystem _particleSystemGotit;
     
+    private void Awake()
+    {
+        _particleSystemGotit = _vfxGotit.GetComponent<ParticleSystem>();
+    }
+
     private void Start()
     {
         _soundPlayer = GameObject.FindWithTag("SoundPlayer").GetComponent<SoundPlayer>();
@@ -129,5 +137,7 @@ public class RhythmItemTrigger : MonoBehaviour
 
         _meshRenderer.material.DOColor(_colorRegular, 0.1f);
         yield return gameObject.transform.DOScale(_startScale, 0.1f).WaitForCompletion();
+        
+        _particleSystemGotit.Play(true);
     }    
 }
