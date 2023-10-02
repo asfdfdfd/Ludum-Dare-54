@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-public class Scene04 : MonoBehaviour
+public class Scene04 : Scene
 {
     [SerializeField] private GameObject _hammerGameObject;
     [SerializeField] private GameObject _corpseGameObject;
@@ -23,6 +23,8 @@ public class Scene04 : MonoBehaviour
 
     private int _currentTargetAbsIndex = 0;
 
+    private Vector3 _corpseStartScale;
+        
     private void Start()
     {
         _rhythmItemTrigger = GameObject.FindWithTag("RhythmItemTrigger").GetComponent<RhythmItemTrigger>();
@@ -33,6 +35,16 @@ public class Scene04 : MonoBehaviour
         _hammerStartupPosition = _hammerGameObject.transform.position;
 
         _lickerStartupPosition = _heroGameObject.transform.position;
+
+        _corpseStartScale = _corpseGameObject.transform.localScale;
+    }
+    
+    public override void Blink()
+    {
+        var abs01EndScale = _corpseStartScale - new Vector3(5, 5, 5);
+        var abs01ForwardTween = _corpseGameObject.transform.DOScale(abs01EndScale, 0.25f);
+        var abs01BackwardTween = _corpseGameObject.transform.DOScale(_corpseStartScale, 0.25f);
+        DOTween.Sequence().Append(abs01ForwardTween).Append(abs01BackwardTween);
     }
 
     private void OnRhythmItemCaptured()

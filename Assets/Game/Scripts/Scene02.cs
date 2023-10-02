@@ -2,17 +2,19 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-public class Scene02 : MonoBehaviour
+public class Scene02 : Scene
 {
     [SerializeField] private GameObject _abs01GameObject;
     [SerializeField] private GameObject _abs02GameObject;
     [SerializeField] private GameObject _lickerGameObject;
 
-    [SerializeField] private float _lickerLeftDelta;
-    [SerializeField] private float _lickerRightDelta;
+    [SerializeField] private float _lickerLeftX;
+    [SerializeField] private float _lickerRightX;
     
-    [SerializeField] private float _abs01Delta;
-    [SerializeField] private float _abs02Delta;
+    [SerializeField] private float _abs01X;
+    [SerializeField] private float _abs02X;
+
+    [SerializeField] private Animator _lickerAnimator;
     
     private RhythmItemTrigger _rhythmItemTrigger;
 
@@ -23,6 +25,9 @@ public class Scene02 : MonoBehaviour
 
     private int _currentTargetAbsIndex = 0;
 
+    private Vector3 _abs01StartScale;
+    private Vector3 _abs02StartScale;
+    
     private void Start()
     {
         _rhythmItemTrigger = GameObject.FindWithTag("RhythmItemTrigger").GetComponent<RhythmItemTrigger>();
@@ -30,10 +35,27 @@ public class Scene02 : MonoBehaviour
         _rhythmItemTrigger.OnRhythmItemCaptured.AddListener(OnRhythmItemCaptured);
         _rhythmItemTrigger.OnRhythmItemMissed.AddListener(OnRhythmMissed);
 
-        _abs01StartupPosition = _abs01GameObject.transform.position;
-        _abs02StartupPosition = _abs02GameObject.transform.position;
+        _abs01StartupPosition = _abs01GameObject.transform.localPosition;
+        _abs02StartupPosition = _abs02GameObject.transform.localPosition;
 
-        _lickerStartupPosition = _lickerGameObject.transform.position;
+        _lickerStartupPosition = _lickerGameObject.transform.localPosition;
+        
+
+        _abs01StartScale = _abs01GameObject.transform.localScale;
+        _abs02StartScale = _abs02GameObject.transform.localScale;        
+    }
+
+    public override void Blink()
+    {
+        var abs01EndScale = _abs01StartScale - new Vector3(0.003f, 0.003f, 0.003f);
+        var abs01ForwardTween = _abs01GameObject.transform.DOScale(abs01EndScale, 0.25f);
+        var abs01BackwardTween = _abs01GameObject.transform.DOScale(_abs01StartScale, 0.25f);
+        DOTween.Sequence().Append(abs01ForwardTween).Append(abs01BackwardTween);
+        
+        var abs02EndScale = _abs02StartScale - new Vector3(0.003f, 0.003f, 0.003f);
+        var abs02ForwardTween = _abs02GameObject.transform.DOScale(abs02EndScale, 0.25f);
+        var abs02BackwardTween = _abs02GameObject.transform.DOScale(_abs02StartScale, 0.25f);
+        DOTween.Sequence().Append(abs02ForwardTween).Append(abs02BackwardTween);   
     }
 
     private void OnRhythmItemCaptured()
@@ -43,21 +65,23 @@ public class Scene02 : MonoBehaviour
         
         if (_currentTargetAbsIndex == 0)
         {
-            targetAbsPositionX = _lickerLeftDelta;
-            targetAbsRotationY = -90;
+            targetAbsPositionX = _lickerLeftX;
+            targetAbsRotationY = 180;
         }
         else
         {
-            targetAbsPositionX = _lickerRightDelta;
-            targetAbsRotationY = 90;
+            targetAbsPositionX = _lickerRightX;
+            targetAbsRotationY = 0;
         }
         
-        var lickerForwardTween = _lickerGameObject.transform.DOMoveX(_lickerStartupPosition.x + targetAbsPositionX, 0.1f);
-        var lickerBackwardsTween = _lickerGameObject.transform.DOMoveX(_lickerStartupPosition.x, 0.1f);
+        var lickerForwardTween = _lickerGameObject.transform.DOLocalMoveX(targetAbsPositionX, 0.1f);
+        var lickerBackwardsTween = _lickerGameObject.transform.DOLocalMoveX(_lickerStartupPosition.x, 0.1f);
 
         DOTween.Sequence().Append(lickerForwardTween).Append(lickerBackwardsTween);
 
         _lickerGameObject.transform.DOLocalRotate(new Vector3(0.0f, targetAbsRotationY, 0.0f), 0.1f);
+        
+        _lickerAnimator.SetTrigger("Lick");
         
         SwitchToNextTargetAbs();
     }
@@ -74,14 +98,19 @@ public class Scene02 : MonoBehaviour
 
     private void OnRhythmMissed()
     {
-        var abs01ForwardTween = _abs01GameObject.transform.DOMoveX(_abs01StartupPosition.x + _abs01Delta, 0.1f);
-        var abs01BackwardsTween = _abs01GameObject.transform.DOMoveX(_abs01StartupPosition.x, 0.1f);
+        var abs01ForwardTween = _abs01GameObject.transform.DOLocalMoveX(_abs01X, 0.1f);
+        var abs01BackwardsTween = _abs01GameObject.transform.DOLocalMoveX(_abs01StartupPosition.x, 0.1f);
 
         DOTween.Sequence().Append(abs01ForwardTween).Append(abs01BackwardsTween);
         
-        var abs02ForwardTween = _abs02GameObject.transform.DOMoveX(_abs02StartupPosition.x - _abs02Delta, 0.1f);
-        var abs02BackwardsTween = _abs02GameObject.transform.DOMoveX(_abs02StartupPosition.x, 0.1f);
+        var abs02ForwardTween = _abs02GameObject.transform.DOLocalMoveX(_abs02X, 0.1f);
+        var abs02BackwardsTween = _abs02GameObject.transform.DOLocalMoveX(_abs02StartupPosition.x, 0.1f);
         
         DOTween.Sequence().Append(abs02ForwardTween).Append(abs02BackwardsTween);
+        
+        var lickerScaleForward = _lickerGameObject.transform.DOScaleX(0.002f, 0.1f);
+        var lickerScaleBackward = _lickerGameObject.transform.DOScaleX(0.025f, 0.1f);
+        
+        DOTween.Sequence().Append(lickerScaleForward).Append(lickerScaleBackward);        
     }
 }
