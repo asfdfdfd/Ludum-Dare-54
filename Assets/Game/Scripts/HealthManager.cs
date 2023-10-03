@@ -7,6 +7,8 @@ using UnityEngine.SceneManagement;
 public class HealthManager : MonoBehaviour
 {
     private int _health;
+
+    [SerializeField] private GameObject _prefabVfx;
     
     private void Start()
     {
@@ -15,7 +17,13 @@ public class HealthManager : MonoBehaviour
 
     public void Hit()
     {
-        Destroy(transform.GetChild(_health - 1).gameObject);
+        var gameObjectToDestroy = transform.GetChild(_health - 1).gameObject;
+        var gameObjectToDestroyPosition = gameObjectToDestroy.transform.position;
+        
+        Destroy(gameObjectToDestroy);
+        
+        var gameObjectVfx = Instantiate(_prefabVfx);
+        gameObjectVfx.transform.position = gameObjectToDestroyPosition;
 
         _health--;
         
